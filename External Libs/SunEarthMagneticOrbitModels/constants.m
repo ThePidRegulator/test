@@ -77,7 +77,8 @@
 
 %% IGRF12 coefficients. Inspired by loadigrfcoefs.m from Compston (2011) Matlab File Exchange International Geomagnetic Reference Field (IGRF) Model
     global IGRFGH IGRFGHSV
-    igrfdata = xlsread('IGRF12coeffsMatlabFormat.xls','igrf12coeffsMatlabFormat');
+    %igrfdata = xlsread('IGRF12coeffsMatlabFormat.xls','igrf12coeffsMatlabFormat');
+    igrfdata = odsread('External Libs\SunEarthMagneticOrbitModels\IGRF12coeffsMatlabFormat.ods','igrf12coeffsMatlabFormat');
     IGRFGH = igrfdata(:,3);
     IGRFGHSV = igrfdata(:,4);
 
