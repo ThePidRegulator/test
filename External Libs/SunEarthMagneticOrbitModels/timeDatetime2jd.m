@@ -36,5 +36,5 @@ function jd = timeDatetime2jd(time) %#codegen
          + floor( 275 * time.mon / 9.0 ) ...
          + time.day + 1721013.5  ...
          + ( (time.sec/60.0 + time.min ) / 60.0 + time.hr ) / 24.0;
-    %  - 0.5 * sign(100.0 * time.yr + time.mon - 190002.5) + 0.5;
+         %- 0.5 * sign(100.0 * time.year + time.mon - 190002.5) + 0.5;
 end
