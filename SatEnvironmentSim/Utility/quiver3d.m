@@ -32,6 +32,11 @@
 %
 % DBE 10/17/04
 % DBE 10/18/04 Fixed bug in arrow diameter scaling.  Fixed bug in arrow length.
+%
+% Added credits because i thought it apropriate despite them not being in the 
+% origianl file.
+% Author: Daniel Ennis 
+% https://se.mathworks.com/matlabcentral/profile/authors/544705-daniel-ennis
 function p=quiver3d(X,Y,Z,U,V,W,arrow_color,scaling,N)
 % Check the input data size
 if nargin==0   % This just generates an example 
