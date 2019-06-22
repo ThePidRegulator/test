@@ -6,8 +6,8 @@
 % This script shall define ALL the global constants needed anywhere in the
 %   prediction algorithms for sun, orbital position and geomagnetic field.
 
-    load tle;
-
+    load tle_testSat;
+	tle_testSat = tle;
     global DEG2RAD
     DEG2RAD = pi / 180.0;
 
@@ -77,14 +77,13 @@
 
 %% IGRF12 coefficients. Inspired by loadigrfcoefs.m from Compston (2011) Matlab File Exchange International Geomagnetic Reference Field (IGRF) Model
     global IGRFGH IGRFGHSV
-    %igrfdata = xlsread('IGRF12coeffsMatlabFormat.xls','igrf12coeffsMatlabFormat');
-    igrfdata = odsread('External Libs\SunEarthMagneticOrbitModels\IGRF12coeffsMatlabFormat.ods','igrf12coeffsMatlabFormat');
+    igrfdata = csvread('Models\SunEarthMagneticOrbitModels\EarthMagnetic\IGRF12coeffsMatlabFormat.csv',0,1);
     IGRFGH = igrfdata(:,3);
     IGRFGHSV = igrfdata(:,4);
 
 %% WMM2015 coefficients
     global WMMG WMMGSV WMMH WMMHSV
-    wmmdata = dlmread('WMM2015coeffsMatlabFormat.COF');
+    wmmdata = dlmread('Models\SunEarthMagneticOrbitModels\EarthMagnetic\WMM2015coeffsMatlabFormat.COF');
     WMMG = wmmdata(:,3);
     WMMH = wmmdata(:,4);
     WMMGSV = wmmdata(:,5);
