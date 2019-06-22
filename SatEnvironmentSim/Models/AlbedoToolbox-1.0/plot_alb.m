@@ -18,6 +18,7 @@ if nargin > 1 && strcmp(type,'s')
 	return;
 end
 
+
 [sy sx] = size(albedo);
 dy = 180/sy;
 dx = 360/sx;
@@ -25,9 +26,25 @@ dx = 360/sx;
 lat = [-90+dy/2:dy:90-dy/2]';
 lon = [-180+dx/2:dx:180-dx/2]';
 
-hp = surf(lon,lat,albedo);
+	hax = gca;
+	hold on
+
+persistent h1 h2 h3
+if isempty(h1)
+	h3 = surf(lon,lat,albedo);
+	h1=surf(hax,lon,lat,-0.1+zeros(90,144));									%fix rendering bug of borde to 0 gradient shown as white lines by painting a surface underneath
+	h2=surf(hax,-180,-90,60);
+else
+	set(h3,'zdata',albedo);
+	set(h3,'cdata',albedo);
+
+end
+	
+
+	
+	
 view(0,90);
-axis([-180+dx 180-dx -90+dy 90-dy]);
+axis([-180+dx/2 180-dx/2 -90+dy/2 90-dy/2]);
 shading('interp');
 title('Albedo');
 xlabel('Longitude [deg]');

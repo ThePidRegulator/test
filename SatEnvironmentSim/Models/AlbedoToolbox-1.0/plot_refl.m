@@ -34,6 +34,8 @@ lat = [-90+dy/2:dy:90-dy/2]';
 lon = [-180+dx/2:dx:180-dx/2]';
 
 hp = surf(lon,lat,refl.data.*100);
+
+
 view(0,90);
 axis([-180+dx 180-dx -90+dy 90-dy]);
 shading('interp');
