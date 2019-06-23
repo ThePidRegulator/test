@@ -12,6 +12,6 @@ dx = 2*pi/sx;
 dy = pi/sy;
 
 phi = pi-dy/2-(i-1)*dy; % y: 1 -> sy, phi: 180 -> 0
-theta = (j-1)*dx-pi+dx/2; % x: 1-> sx theta: -180 -> 180
+theta = -(pi+dx/2) + ((j-1)*dx); % x: 1-> sx theta: -180 -> 180
 
 return
