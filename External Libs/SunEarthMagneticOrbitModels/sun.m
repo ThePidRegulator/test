@@ -23,7 +23,7 @@
 %      sec         - universal time sec             0.0 .. 59.999
 %
 %  outputs       :
-%    rsun        - eci position vector of the sun
+%    rsun        - eci position vector of the sun normed to magnitude one
 %
 %  locals        :
 %    meanlong    - mean longitude
@@ -87,7 +87,7 @@ global TWOPI DEG2RAD
                           - 0.000139589 *cos( 2.0 *meananomaly );    % in au's
 
     % sun position in MOD
-    rsun = [0;0;0];
+    rsun = [0;0;];
     rsun(1)= magr*cos( eclplong );
     rsun(2)= magr*cos(obliquity)*sin(eclplong);
     rsun(3)= magr*sin(obliquity)*sin(eclplong);
@@ -95,5 +95,7 @@ global TWOPI DEG2RAD
     % transform to eci
     prec = framePrecess(ttt);
     rsun = prec*rsun;
-
+    
+    % norm output vector
+    rsun = rsun/norm(rsun);
 end
