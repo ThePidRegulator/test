@@ -10,6 +10,7 @@
 % of the output data.
 %
 % $Id: earthfov.m,v 1.15 2006/02/23 08:31:33 danji Exp $
+% $Id: earthfov.m,       2019/05/30 00:00:00 Henrik Rudi Haave $
 
 function result = earthfov(satsph,refl,type);
 
@@ -25,41 +26,32 @@ end
 OUTVALUE = 1;
 
 % Discretization parameters
-if isfield(refl,'data')
-  [sy sx] = size(refl.data);
-else 
-  sy = refl(1);
-  sx = refl(2);
-end
+[sy sx] = size( refl.data );
+
 dx = 2*pi/sx;
 dy = pi/sy;
-result = zeros(sy,sx);
+result = zeros( sy, sx );
 
 % Small Circle Center
 theta0 = satsph(1);
-phi0 = satsph(2);
+sinPhi0 = sin( satsph(2) );
+cosPhi0 = cos( satsph(2) );
 
 % FOV on earth
-rho = acos(CONST.EMR/satsph(3));
+%sy phi
+%sx theta
 
-for i = 1:sy
-	for j = 1:sx        
-		[theta, phi] = idx2rad(i,j,sy,sx);
-		% Radial distance
-		rd = acos(sin(phi0)*sin(phi)*cos(theta0-theta)+cos(phi0)*cos(phi));
-		if rd <= rho
-			result(i,j) = OUTVALUE;
-		end
-	end
-end
+rho = acos( CONST.EMR/satsph(3) );
 
-if nargin > 1 && isfield(refl,'data')
-  if nargin > 2
+% the speed of this may be further increased by using the properti that (rsat-gridpos)*gridposNormal=0;
+% at the satelites fov horizon instead of trig or in other words there is also cone circle mapping that gives fov.
+result = acos( (sinPhi0*sin( refl.radiMap(1,1:sy) ))'...
+                * cos( theta0-refl.radiMap(2, 1:sx) )...
+                + (cosPhi0*cos( refl.radiMap(1, 1:sy) ))' )<=rho;
+
+
+if nargin > 2 && isfield(refl,'data')
     plot_refl(mask(refl.data,result),type,'no colorbar');
-  else
-    plot_refl(mask(refl.data,result),'p','no colorbar');
-  end
-  title('Field of View');
 end
 
 return
