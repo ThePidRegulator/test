@@ -9,19 +9,13 @@
 % unspecified no plots are generated.
 %
 % $Id: albedo.m,v 1.28 2006/05/17 14:39:16 danji Exp $
-
-function a = albedo2(sat,sun,data,type)
-
+function a = albedo(sat,sun,refl,type);
+        
 CONST.EMR = 6371.01e3;
 CONST.AM0 = 1366.9;
 CONST.d2r = pi/180;
-irad = CONST.AM0; % [W/m^2]
-EMR = CONST.EMR;
-satsph = zeros(3,1);
-sunsph = zeros(3,1);
 
 % Support row vectors
-
 if length(sat) > size(sat,1)
   sat = sat';
 end
@@ -31,7 +25,7 @@ if length(sun) > size(sun,1)
 end
 
 % Data size
-[sy, sx] = size(data);
+[sy sx] = size(refl.data);
 
 % Check for satellite attitude common error
 if norm(sat) < CONST.EMR
@@ -39,22 +33,23 @@ if norm(sat) < CONST.EMR
 end
 
 % Spherical coordinates
-[satsph(1), satsph(2), satsph(3)] = cart2sph(sat(1),sat(2),sat(3));
-[sunsph(1), sunsph(2), sunsph(3)] = cart2sph(sun(1),sun(2),sun(3));
+[satsph(1) satsph(2) satsph(3)] = cart2sph(sat(1),sat(2),sat(3));
+[sunsph(1) sunsph(2) sunsph(3)] = cart2sph(sun(1),sun(2),sun(3));
 
 % Convert phi to polar angle
 satsph(2) = pi/2 - satsph(2);
 sunsph(2) = pi/2 - sunsph(2);
 
 % REFL indices
-[sun_i, sun_j] = rad2idx(sunsph(1),sunsph(2),sy,sx);
+[sun_i sun_j] = rad2idx(sunsph(1),sunsph(2),sy,sx);
+[sat_i sat_j] = rad2idx(satsph(1),satsph(2),sy,sx);
 
 % Visible elements
 fov = earthfov(satsph,[sy sx]);
 if nargin > 3
 	figure(1);
 	subplot(3,1,1);
-	plot_refl(mask(data,fov),type,'no colorbar');
+	plot_refl(mask(refl.data,fov),type,'no colorbar');
 	title('Satellite Field of View');
 end
 
@@ -62,7 +57,7 @@ end
 vis = earthfov(sunsph,[sy sx]);
 if nargin > 3
 	subplot(3,1,2);
-	plot_refl(mask(data,vis),type,'no colorbar');
+	plot_refl(mask(refl.data,vis),type,'no colorbar');
 	title('Solar Field of View');
 end
 
@@ -70,42 +65,46 @@ end
 union = fov & vis;
 if nargin > 3
 	subplot(3,1,3);
-	plot_refl(mask(data,union),type,'no colorbar');
+	plot_refl(mask(refl.data,union),type,'no colorbar');
 	title('Sunlit Satellite Field of View');
 end
 
 % Solar irradiance
-
+irad = CONST.AM0; % [W/m^2]
+index = 1;
 
 % Loop through refl array and select sunlit and satellite visible cells
 a = zeros(sy,sx);
-parfor i=1:sy
-    grid = zeros(3,1);
+grid = zeros(3,1);
+for i=1:sy
     for j=1:sx
         if union(i,j)
-		% Angle of incident solar irradiance
-			phi_in = gridangle(i,j,sun_i,sun_j,sy,sx);
-        % Account for numerical inaccuracies.
+                
+            % Angle of incident solar irradiance
+            phi_in = gridangle(i,j,sun_i,sun_j,sy,sx);
+            
+            % Account for numerical inaccuracies.
             if phi_in > pi/2
                 phi_in = pi/2;
             end
-        % Incident power
+            
+            % Incident power					
             E_in = irad*cellarea(i,j,sy,sx)*cos(phi_in);
-           
-        % Distance to sat from grid
-			[grid_theta, grid_phi] = idx2rad(i,j,sy,sx);
-			[grid(1), grid(2), grid(3)] = sph2cart(grid_theta,pi/2-grid_phi,EMR);
             
-        %grid = [grid(1);grid(2);grid(3)];
-			satdist = norm(sat-grid);
+            % Distance to sat from grid
+            [grid_theta grid_phi] = idx2rad(i,j,sy,sx);
+            [grid(1) grid(2) grid(3)] = sph2cart(grid_theta,pi/2-grid_phi,CONST.EMR);
             
-        % Angle to sat from grid
-			phi_out = acos(((sat-grid)/satdist)'*grid/norm(grid));
-            P_out = E_in*data(i,j)*cos(phi_out)/(pi*satdist^2);
+            % grid = [grid(1);grid(2);grid(3)];
+            satdist = norm(sat-grid);
             
-        % Store in array
-			a(i,j) = P_out;
-        %index = index + 1;
+            % Angle to sat from grid
+            phi_out = acos(((sat-grid)/satdist)'*grid/norm(grid));
+            P_out = E_in*refl.data(i,j)*cos(phi_out)/(pi*satdist^2);
+            
+            % Store in array
+            a(i,j) = P_out;
+            index = index + 1;
         end
     end
 end
