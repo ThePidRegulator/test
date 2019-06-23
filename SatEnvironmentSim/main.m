@@ -84,7 +84,7 @@ for Jd = Start_Jd:Delta_Jd:End_Jd;
         r_sun_eci = sun( timeUTC ) * AU;
         r_sun_ecef = eci2ecef * r_sun_eci;
         
-        a_sat_ecef = albedo( r_sat_ecef, r_sun_ecef,refl );
+        a_sat_ecef = albedoV( r_sat_ecef, r_sun_ecef,refl );
         
         B_sat_ecef = magIgrf2( r_sat_ecef, timeUTC );
            
