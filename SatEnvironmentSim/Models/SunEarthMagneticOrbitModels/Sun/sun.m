@@ -95,7 +95,4 @@ global TWOPI DEG2RAD
     % transform to eci
     prec = framePrecess(ttt);
     rsun = prec*rsun;
-    
-    % norm output vector
-    rsun = rsun/norm(rsun);
 end
