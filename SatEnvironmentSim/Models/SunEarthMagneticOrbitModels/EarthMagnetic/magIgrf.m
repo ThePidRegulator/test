@@ -16,8 +16,8 @@
 % Copied and edited from Compston (2011) Matlab File Exchange International Geomagnetic Reference Field (IGRF) Model
 % 
 % Inputs:
-%    reci        - position vector eci            km
-%    timeUTC     - struct containing:
+%    recef         - position vector eci            km
+%    timeUTC       - struct containing:
 %      year        - year                           1900 .. 2100
 %      mon         - month                          1 .. 12
 %      day         - day                            1 .. 28,29,30,31
@@ -26,7 +26,7 @@
 %      sec         - universal time sec             0.0 .. 59.999
 % 
 % Outputs:
-%    Beci        - geomagnetic field vector in nanotesla (nT) in eci frame
+%    Becef        - geomagnetic field vector in nanotesla (nT) in eci frame
 %
 % Coupling
 %    timeDatetime2years     - convert date and time values to fractional years
@@ -41,7 +41,7 @@
 % See also
 %    magWmm.m  - alternative geomagnetic vector predictor
 
-function [Beci] = magIgrf(reci,timeUTC) %#codegen
+function [Becef] = magIgrf(recef,timeUTC) %#codegen
 global IGRFGH IGRFGHSV RMEAN REQU RPOL DEG2RAD
 
 %% Edited excerpt of loadigrfcoefs.m from Compston (2011) Matlab File Exchange International Geomagnetic Reference Field (IGRF) Model
@@ -58,7 +58,6 @@ global IGRFGH IGRFGHSV RMEAN REQU RPOL DEG2RAD
 %% Edited excerpt of igrf.m from Compston (2011) Matlab File Exchange International Geomagnetic Reference Field (IGRF) Model
 
     % Transform eci input vector to geodetic coordinates
-    recef = frameEci2ecef(reci,timeUTC);
     rgeod = frameEcef2geod(recef);
     latitude = rgeod(1);
     longitude = rgeod(2);
@@ -112,6 +111,7 @@ global IGRFGH IGRFGHSV RMEAN REQU RPOL DEG2RAD
     % Increment through all the n's and m's. gh will be a vector with g
     % followed by h for incrementing through n and m except when h would be
     % redundant (i.e., when m = 0).
+
     for Pindex = 2:Pmax
 
         % Increment to the next n when m becomes larger than n.
@@ -200,5 +200,4 @@ global IGRFGH IGRFGHSV RMEAN REQU RPOL DEG2RAD
     % Convert to ECI from Fossen (2011) Handbook of Marine Craft Hydrodynamics and Motion Control
     Ned2ecef = frameRotationNed2ecef(sinlat, coslat, sinphi(1), cosphi(1));
     Becef = Ned2ecef*B;
-    Beci = frameEcef2eci(Becef,timeUTC);
 end
