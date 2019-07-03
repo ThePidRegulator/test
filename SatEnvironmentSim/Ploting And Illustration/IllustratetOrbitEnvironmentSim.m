@@ -13,7 +13,7 @@ function IllustratetOrbitEnvironmentSim(steps,refl)
         illuData = IllustrationData;
         % sy row
         % sx col
-%% Format and prep the data neded for illustration, timesteps are stored in {:}
+        %% Format and prep the data neded for illustration, timesteps are stored in {:}
         albedo = [steps(:).a_sat_ecef];
         mapSize = size( refl.data );
         
@@ -38,13 +38,10 @@ function IllustratetOrbitEnvironmentSim(steps,refl)
         satsph(:,2) = pi/2 - satsph(:,2);
         sunsph(:,2) = pi/2 - sunsph(:,2);
 
-        fov = earthfov( satsph, refl );
-        vis = earthfov( sunsph, refl );
-        union = fov & vis;
-        unionIdx =find( union );
-        
-        
-        
+        satFov = earthfov( satsph, refl );
+        sunlit = earthfov( sunsph, refl );
+        litFov = sunlit & satFov;
+        unionIdx =find( litFov );
         
         
         % Cartesean Earth sources and indexes of wich sunlight is reflected from

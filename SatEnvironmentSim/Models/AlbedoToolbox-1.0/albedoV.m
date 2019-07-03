@@ -39,14 +39,14 @@ function a = albedo( sat, sun, refl, type )
         [sy,sx] = size (refl.data);
         
         % Visible elements & Sunlit elements
-        visible = earthfovV( sat, refl.normalMap );
+        satFov = earthfovV( sat, refl.normalMap );
         sunlit = earthfovV( sun, refl.normalMap );
-        visLit = visible & sunlit;
+        litFov = satFov & sunlit;
         
         % sy row
         % sx col
         % Find matrix indexes of sun reflecting Earth/sphr faces seen by sat
-        [rowIdx,colIdx] = find( visLit );
+        [rowIdx,colIdx] = find( litFov );
         if( (size(rowIdx, 1)>0) && (size(colIdx)>0) )
                 
                 visLitIdx = sub2ind( [sy, sx], rowIdx, colIdx );
@@ -61,7 +61,7 @@ function a = albedo( sat, sun, refl, type )
                 face2satDist = sqrt( dot( face2sat, face2sat, 2 ) );
                 face2satDir = rdivide( face2sat, face2satDist );
                 
-                % Incident irradiance from the sun onto visible faces
+                % Incident irradiance from the sun onto satFov faces
                 E_in = CONST.AM0 .* refl.areaMap(rowIdx)'...
                                  .* (faceNorm*(sun/norm(sun)));
                 
@@ -81,12 +81,12 @@ function a = albedo( sat, sun, refl, type )
         end
         
         %-----------------------------------------------------------------------
-        % plot the sat visible, sun lit and visLit of these areas on Earth and 
+        % plot the sat satFov, sun lit and litFov of these areas on Earth and 
         % plot reflected irradiance as seen by the satelite 
         if nargin > 3
                 figure (1);
                 subplot (3, 1, 1);
-                plot_refl (mask( refl.data, visible ), type, 'no colorbar');
+                plot_refl (mask( refl.data, satFov ), type, 'no colorbar');
                 title( 'Satellite Field of View' );
         end
         
@@ -98,13 +98,13 @@ function a = albedo( sat, sun, refl, type )
         
         if nargin > 3
                 subplot ( 3, 1, 3 );
-                plot_refl ( mask( refl.data, visLit ), type, 'no colorbar' );
+                plot_refl ( mask( refl.data, litFov ), type, 'no colorbar' );
                 title( 'Sunlit Satellite Field of View' );
         end
         
         if nargin > 3
                 irradianceMap = zeros (sy, sx);
-                irradianceMap(visLit) = a.irr;
+                irradianceMap(litFov) = a.irr;
                 
                 figure (2);
                 plot_alb (irradianceMap, type);
