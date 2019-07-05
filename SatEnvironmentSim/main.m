@@ -83,7 +83,7 @@ for Jd = Start_Jd:Delta_Jd:End_Jd;
         
         a_sat_ecef = albedoV( r_sat_ecef, r_sun_ecef,refl );
         
-        B_sat_ecef = magIgrf2( r_sat_ecef, timeUTC );
+        B_sat_ecef = magIgrf( r_sat_ecef, timeUTC );
         
         %gravity vector      variations to small to matter?
         

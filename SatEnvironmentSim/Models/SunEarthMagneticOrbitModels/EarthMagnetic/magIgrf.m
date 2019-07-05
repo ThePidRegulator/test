@@ -197,7 +197,7 @@ global IGRFGH IGRFGHSV RMEAN REQU RPOL DEG2RAD
     % Build output vector NED
     B = [Bx;By;Bz];
     
-    % Convert to ECI from Fossen (2011) Handbook of Marine Craft Hydrodynamics and Motion Control
+    % convert to ecef from ned
     Ned2ecef = frameRotationNed2ecef(sinlat, coslat, sinphi(1), cosphi(1));
     Becef = Ned2ecef*B;
 end
