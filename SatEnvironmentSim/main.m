@@ -47,8 +47,8 @@ satrec = orbitTwoline2rv(tle_testSat);
 
 %-----------------------------Simulation Time-----------------------------------  3 hours = 56.6MB  24h = 452MB
 %                                               year,mon,day,hour,min,sec
-[Start_Jd, End_Jd, Delta_Jd] = Init_Jd_stepping(1980, 10, 01, 01, 30, 00.0,...  %Start
-                                                1980, 10, 01, 04, 30, 00.0,...  %End
+[Start_Jd, End_Jd, Delta_Jd] = Init_Jd_stepping(1979, 10, 01, 01, 30, 00.0,...  %Start
+                                                1979, 10, 01, 02, 30, 00.0,...  %End
                                                                   00, 01.0);    %steps size
 
 %------------------------Initializing storage struct ---------------------------
@@ -113,9 +113,9 @@ end
 % ------------------------------Save simulation --------------------------------
 
 satname = "aTestDay";
-starttime = "_1980y10m01d01h30m00s";
+starttime = "_1979y10m01d01h30m00s";
 Ssteps = num2str(S);
-stepsize = ["D10s"];
+stepsize = ["D01s"];
 reflectionmap = "_a050101-051231";
 filename = [satname,starttime,Ssteps,stepsize,reflectionmap]
 
