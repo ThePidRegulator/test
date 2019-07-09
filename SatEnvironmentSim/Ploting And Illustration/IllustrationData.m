@@ -1,15 +1,16 @@
 classdef IllustrationData < handle
         properties (SetAcces = public, GetAcces = public)
                 S = [];
-                rsun = {};
-                rsat = {};
-                albDir = {};
-                albIrr = {};
-                maxIrr = [];
-                cartSrcMap = [];
-                albSrcIdx = {};
-                sunlitRefl = {};
-                fovSunlitRefl = {};
+                rSun = {};
+                rSat = {};
+                albedoDir = {};
+                albedoIrr = {};
+                albedoSrce = {};
+                albedoMaxIrr = [];
+                satFovMap = {};
+                sunlitMap = {};
+                litFovMap = {};
+                reflMap = [];
                 EarthH = [];
         end
 end
