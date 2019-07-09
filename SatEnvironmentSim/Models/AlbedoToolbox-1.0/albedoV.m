@@ -15,7 +15,7 @@
 %
 % 2019 Henrik Rudi Haave
 
-function a = albedo( sat, sun, refl, type )
+function a = albedoV( sat, sun, refl, type )
         
         CONST.EMR = 6371.01e3;
         CONST.AM0 = 1366.9;
